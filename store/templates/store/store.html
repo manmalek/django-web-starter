@@ -1,0 +1,59 @@
+{% extends SELECTED_THEME %}
+{% load static %}
+{% load humanize %}
+{% load discount_tag %}
+{% block content %}
+	{% if category %}
+	<div class="row">
+		<div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 text-right">
+			<h6><strong>تعداد {{products|length}} گزینه در  دسته بندی  «{{category.name}}» وجود دارد.</strong></h6>
+		</div>
+	</div>
+	{% endif %}
+	<div class="row">
+		{% for product in products %}
+			{% if sitesettings.show_no_quantity or product.quantity %}
+			<div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+				<a class="image text-decoration-none col-12 p-0 m-0" href="{% url 'product' product.slug %}">
+					<img class="img-fluid col-12 p-0 m-0 {% if product.productfeature_set.all|length > 0 %} img-hover {% endif %}  " src="{{product.imageURL}}">
+					{% if product.base_price %}
+					<span id="curved-corner-topleft"></span>
+					<span id="discount" class="text-white font-sahel-normal">{{ product.price|discount_percent:product.base_price }}%</span>
+					{% endif %}
+					{% if product.productfeature_set.all|length > 0 %}
+					<div class="overlayfeature p-3">
+						<ul>
+						{% for feature in product.productfeature_set.all|slice:":3" %}
+							<li class="itt">{{feature.feature.name}} : {{feature.value}}</li>
+						{% endfor %}
+						</ul>
+					</div>
+					{% endif %}
+				</a>
+				<div class="box-element product">
+					<a class="text-decoration-none col-12 p-0 m-0" href="{% url 'product' product.slug %}">
+						<h6 class="product_name text-right font-sahel-normal"><strong>{{product.name}}</strong></h6>
+						{% if sitesettings.show_quantity %}
+						<h6 class="product_name text-right font-sahel-normal small {% if product.quantity <= 3 %} text-danger {% endif %}"><strong>(موجودی: {% if product.quantity%}{{product.quantity}}{% else %}0{% endif %})</strong></h6>
+						{% endif %}
+					</a>
+					<hr>
+					<div class="text-right">
+						<div style="display:inline-block;">
+							{% if product.base_price %}
+								<h6 class="del mb-0 mt-0 base-price small">{{ product.base_price|intcomma }}</h6>
+							{% else %}
+								<h6 class="del mb-0 mt-3 small"></h6>
+							{% endif %}
+							<h6 class="price mt-0"><strong>{{ product.price|intcomma }}</strong><small> تومان</small></h6>
+						</div>
+						<div class="float-left" style="display:inline-block;">
+							<button data-product={{product.id}} data-action="add" data-quantity=1 class="btn btn-warning add-btn update-cart">خرید</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			{% endif %}
+		{% endfor %}
+	</div>
+{% endblock content %}

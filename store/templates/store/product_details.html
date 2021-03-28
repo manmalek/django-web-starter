@@ -1,0 +1,132 @@
+{% extends SELECTED_THEME %}
+{% load static %}
+{% load humanize %}
+{% load discount_tag %}
+{% block content %}
+  <!--Section: Block Content-->
+  <section class="mb-5 text-right">
+    <div class="row">
+      <div class="col-md-6 اh-100 d-inline-block">
+        <div class="col-12 h-50 py-3 mb-2 img-backdrop">
+              <a id="bigImgContainerhyper" class="h-100 w-100 m-0" href="{% static product.imageURL %}">
+                <img class="h-100 m-auto" id="bigImgContainer" src="{% static product.imageURL %}">
+              </a>
+        </div>
+        <div class="col-12 h-50">
+          <div class="row h-100">
+            {% for proimg in product.productimage_set.all %}
+            <div class="col-3">
+              <div class="rounded z-depth-1 gallery-item">
+                <img src="{{proimg.imageURL}}"
+                  class="img-fluid" onclick="galleryImgChangeFunction(this);">
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 h-100">
+
+        <h5>{{ product.name }}</h5>
+        <p class="mb-2 text-muted text-uppercase small">
+          {% for category in product.category.all %}
+            {{ category.name }} {% if not forloop.last %} > {% endif %}
+          {% endfor %}
+        </p>
+<!--        <ul class="rating form-inline text-left">
+          <li>
+            <i class="fas fa-star fa-sm text-primary"></i>
+          </li>
+          <li>
+            <i class="fas fa-star fa-sm text-primary"></i>
+          </li>
+          <li>
+            <i class="fas fa-star fa-sm text-primary"></i>
+          </li>
+          <li>
+            <i class="fas fa-star fa-sm text-primary"></i>
+          </li>
+          <li>
+            <i class="far fa-star fa-sm text-primary"></i>
+          </li>
+        </ul>
+-->
+        <p><span class="">
+          {% if product.base_price %}
+            <h6 class="del mb-0 mt-0 base-price small">{{ product.base_price|intcomma }}</h6>
+          {% else %}
+            <h6 class="mb-0 mt-3 small"></h6></del>
+          {% endif %}
+          <h6 class="price mt-0"><strong>{{ product.price|intcomma }}</strong><small> تومان</small></h6></span></p>
+        <p class="pt-1 text-justify">{{ product.description|safe }}</p>
+        <hr>
+        <div class="table-responsive mb-2">
+          <table class="table table-sm table-borderless">
+            <tbody>
+              <tr>
+                <td class="pl-0 pb-0 w-25">تعداد</td>
+                <!-- <td class="pb-0">Select size</td> -->
+              </tr>
+              <tr>
+                <td class="pl-0">
+                  <div class="def-number-input number-input safari_only m-0 p-0">
+                    <button onclick="this.parentNode.querySelector('input[type=number]').stepDown()"
+                      class="minus">-</button>
+                    <input class="quantity" min="0" id="quantity" name="quantity" value="1" type="number">
+                    <button onclick="this.parentNode.querySelector('input[type=number]').stepUp()"
+                      class="plus">+</button>
+                  </div>
+                </td>
+<!--                 <td>
+                  <div class="mt-1">
+                    <div class="form-check form-check-inline pl-0">
+                      <input type="radio" class="form-check-input" id="small" name="materialExampleRadios"
+                        checked>
+                      <label class="form-check-label small text-uppercase card-link-secondary"
+                        for="small">Small</label>
+                    </div>
+                    <div class="form-check form-check-inline pl-0">
+                      <input type="radio" class="form-check-input" id="medium" name="materialExampleRadios">
+                      <label class="form-check-label small text-uppercase card-link-secondary"
+                        for="medium">Medium</label>
+                    </div>
+                    <div class="form-check form-check-inline pl-0">
+                      <input type="radio" class="form-check-input" id="large" name="materialExampleRadios">
+                      <label class="form-check-label small text-uppercase card-link-secondary"
+                        for="large">Large</label>
+                    </div>
+                  </div>
+                </td>
+-->
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <button data-product={{product.id}} data-action="add" data-quantity=0 type="button" class="btn btn-primary btn-md mr-1 mb-2 update-cart">افزودن به سبد خرید</button>
+        <hr>
+        <div class="table-responsive">
+          <table class="table table-sm table-borderless mb-0">
+            <tbody>
+              {% for feature in product.productfeature_set.all %}
+              <tr>
+                <th class="pl-0 w-25" scope="row"><strong>{{feature.feature.name}}</strong></th>
+                <td>{{feature.value}}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </section>
+  <!--Section: Block Content-->
+  <script type="text/javascript">
+    function  galleryImgChangeFunction(img){
+      var bigImg = document.getElementById("bigImgContainer");
+      var bigImgHyper = document.getElementById("bigImgContainerhyper");
+      bigImg.src = img.src;
+      bigImgHyper.href = img.src;
+    }
+  </script>
+{% endblock content %}

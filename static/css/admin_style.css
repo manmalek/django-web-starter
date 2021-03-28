@@ -1,0 +1,5 @@
+label + div.related-widget-wrapper{
+	height: 300px;
+	width:400px;
+	overflow: auto;
+}

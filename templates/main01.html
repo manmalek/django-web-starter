@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+{% load static %}
+{% load treeview_tag %}
+
+<html>
+<head>
+	<title>Ecom</title>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1" />
+
+	<link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+	<link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+
+	<link href="{% static 'css/all.css' %}" rel="stylesheet">
+
+	<script type="text/javascript">
+		var user = '{{request.user}}';
+
+		function getToken(name) {
+		    var cookieValue = null;
+		    if (document.cookie && document.cookie !== '') {
+		        var cookies = document.cookie.split(';');
+		        for (var i = 0; i < cookies.length; i++) {
+		            var cookie = cookies[i].trim();
+		            // Does this cookie string begin with the name we want?
+		            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+		                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+		                break;
+		            }
+		        }
+		    }
+		    return cookieValue;
+		}
+		var csrftoken = getToken('csrftoken')		
+
+		function getCookie(name) {
+		    // Split cookie string and get all individual name=value pairs in an array
+		    var cookieArr = document.cookie.split(";");
+
+		    // Loop through the array elements
+		    for(var i = 0; i < cookieArr.length; i++) {
+		        var cookiePair = cookieArr[i].split("=");
+
+		        /* Removing whitespace at the beginning of the cookie name
+		        and compare it with the given string */
+		        if(name == cookiePair[0].trim()) {
+		            // Decode the cookie value and return
+		            return decodeURIComponent(cookiePair[1]);
+		        }
+		    }
+
+		    // Return null if not found
+		    return null;
+		}
+		var cart = JSON.parse(getCookie('cart'))
+
+		if (cart == undefined){
+			cart = {}
+			console.log('Cart Created!', cart)
+			document.cookie ='cart=' + JSON.stringify(cart) + ";domain=;path=/"
+		}
+		console.log('Cart:', cart)		
+	</script>
+</head>
+<body>
+	<header class="header">
+	  <div class="container">
+	    <div class="wrapper">
+	      <div class="header-item-left">
+	        <h1><a href="#" class="brand">Logo</a></h1>
+	      </div>
+	      <div class="header-item-center">
+	        <div class="overlay"></div>
+	        <nav class="menu">
+	          <div class="menu-mobile-header">
+	            <button type="button" class="menu-mobile-arrow"><i class="ion ion-ios-arrow-back"></i></button>
+	            <div class="menu-mobile-title"></div>
+	            <button type="button" class="menu-mobile-close"><i class="ion ion-ios-close"></i></button>
+	          </div>
+	          <ul class="menu-section">
+	            <li class="menu-item-has-children">
+	              <a href="#">دسته بندی محصولات <i class="ion ion-ios-arrow-down"></i></a>
+	              <div class="menu-subs menu-mega menu-column-4 text-right">
+	                {% for category_lo in categories_level_0 %}
+	                <div class="list-item">
+	                	<h4 class="title">{{ category_lo }}</h4>
+	                	
+					</div>
+					{% endfor %}
+	            </li>
+
+	            <li class="menu-item-has-children">
+	              <a href="#">تازه ها <i class="ion ion-ios-arrow-down"></i></a>
+	              <div class="menu-subs menu-mega menu-column-4">
+	                <div class="list-item text-center">
+	                  <a href="#">
+	                    <img src="./asset/image-1.jpg" class="responsive" alt="New Product">
+	                    <h4 class="title">Product 1</h4>
+	                  </a>
+	                </div>
+	                <div class="list-item text-center">
+	                  <a href="#">
+	                    <img src="./asset/image-2.jpg" class="responsive" alt="New Product">
+	                    <h4 class="title">Product 2</h4>
+	                  </a>
+	                </div>
+	                <div class="list-item text-center">
+	                  <a href="#">
+	                    <img src="./asset/image-3.jpg" class="responsive" alt="New Product">
+	                    <h4 class="title">Product 3</h4>
+	                  </a>
+	                </div>
+	                <div class="list-item text-center">
+	                  <a href="#">
+	                    <img src="./asset/image-4.jpg" class="responsive" alt="New Product">
+	                    <h4 class="title">Product 4</h4>
+	                  </a>
+	                </div>
+	              </div>
+	            </li>
+	            <li class="menu-item-has-children">
+	              <a href="#">تخفیفهای ویژه <i class="ion ion-ios-arrow-down"></i></a>
+	            </li>
+	            <li class="menu-item-has-children">
+	              <a href="#">درباره ما <i class="ion ion-ios-arrow-down"></i></a>
+	              <div class="menu-subs menu-column-1">
+	                <ul>
+	                  <li><a href="#">تاریخچه</a></li>
+	                  <li><a href="#">منشور اخلاقی و اهداف</a></li>
+	                  <li><a href="#">مجوزها و افتخارات</a></>
+	                  <li><a href="#">قوانین کاربری</a></>
+	                </ul>
+	              </div>
+	            </li>
+	            <li><a href="#">تماس با ما </a></li>
+	          </ul>
+	        </nav>
+	      </div>
+	      <div class="header-item-right">
+	        <a href="#" class="menu-icon"><i class="ion ion-md-search"></i></a>
+	        <a href="#" class="menu-icon"><i class="ion ion-md-heart"></i></a>
+	        <a href="#" class="menu-icon"><i class="ion ion-md-cart"></i></a>
+	        <button type="button" class="menu-mobile-trigger">
+	          <span></span>
+	          <span></span>
+	          <span></span>
+	          <span></span>
+	        </button>
+	      </div>
+	    </div>
+	  </div>
+	</header>
+    <hr>
+	<div class="container col-12">
+	    <br>
+	    {% block content %}
+
+
+	     {% endblock content %}
+	</div>	
+
+
+	<script src="{% static 'js/jquery-3.4.1.slim.min.js' %}" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+
+	<script src="{% static 'js/popper.min.js' %}" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+
+	<script src="{% static 'js/bootstrap.min.js' %}" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+	<script type="text/javascript" src="{% static 'js/cart.js' %}"></script>
+</body>
+</html>

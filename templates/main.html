@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+{% load static %}
+{% load treeview_tag %}
+<html>
+<head>
+	<title>Ecom</title>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1" />
+
+	<link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+	<link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+
+	<link href="{% static 'css/all.css' %}" rel="stylesheet">
+
+	<script type="text/javascript">
+		var user = '{{request.user}}';
+
+		function getToken(name) {
+		    var cookieValue = null;
+		    if (document.cookie && document.cookie !== '') {
+		        var cookies = document.cookie.split(';');
+		        for (var i = 0; i < cookies.length; i++) {
+		            var cookie = cookies[i].trim();
+		            // Does this cookie string begin with the name we want?
+		            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+		                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+		                break;
+		            }
+		        }
+		    }
+		    return cookieValue;
+		}
+		var csrftoken = getToken('csrftoken')		
+
+		function getCookie(name) {
+		    // Split cookie string and get all individual name=value pairs in an array
+		    var cookieArr = document.cookie.split(";");
+
+		    // Loop through the array elements
+		    for(var i = 0; i < cookieArr.length; i++) {
+		        var cookiePair = cookieArr[i].split("=");
+
+		        /* Removing whitespace at the beginning of the cookie name
+		        and compare it with the given string */
+		        if(name == cookiePair[0].trim()) {
+		            // Decode the cookie value and return
+		            return decodeURIComponent(cookiePair[1]);
+		        }
+		    }
+
+		    // Return null if not found
+		    return null;
+		}
+		var cart = JSON.parse(getCookie('cart'))
+
+		if (cart == undefined){
+			cart = {}
+			console.log('Cart Created!', cart)
+			document.cookie ='cart=' + JSON.stringify(cart) + ";domain=;path=/"
+		}
+		console.log('Cart:', cart)		
+	</script>
+</head>
+<body>
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+	  <a class="navbar-brand font-sahel-normal text-right" href="{% url 'store' %}">{% if sitesettings.site_logo %}<img class="logo-image" src="{{sitesettings.logoURL}}">{% else %} {{ sitesettings.site_name }} {% endif %}</a>
+	  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+	    <span class="navbar-toggler-icon"></span>
+	  </button>
+
+	  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+	  <ul class="navbar-nav ml-auto">
+      
+	  	{% for category in categories_level_0 %}
+		<li class="nav-item dropdown">
+	 	  <a class="nav-link dropdown font-sahel-normal text-right text-white" href="#" id="navbarDropdown" aria-haspopup="true" aria-expanded="false">
+		  {{category.name}}
+		  </a>
+		  <div class="dropdown-menu bg-dark dropmenu-align-right mt-0" aria-labelledby="navbarDropdown">
+	  		{% for subcategory in category|treeview_children:1 %}
+		    <a class="dropdown-item font-sahel-small text-right text-light" href="/{{subcategory.slug}}">{{ subcategory.name }}</a>
+	  		{% endfor %}
+		  </div>
+		</li>
+		{% endfor %}
+
+ 	  </ul>
+	  </div>
+	  <div class=" form-inline my-2 my-lg-0">
+	 	<a href="#"class="btn btn-warning ml-2">ورود</a>
+	 	
+	 	<a href="{% url 'cart' %}">
+			<img  id="cart-icon" src="{% static 'images/cart.png' %}">
+		</a>
+		<p id="cart-total">{{cartItems}}</p>
+
+	  </div>
+
+	</nav>
+    <hr>
+	<div class="container col-12">
+	    <br>
+	    {% block content %}
+
+
+	     {% endblock content %}
+	</div>	
+
+    <!-- Footer -->
+    <footer>
+    	<div class="footer-top mt-5 p-3">
+	        <div class="container">
+	        	<div class="row">
+	        		<div class="col-md-3 footer-about wow fadeInUp"  style="text-align: justify;">
+	        			{% if sitesettings.site_logo %}<img class="logo-image" src="{{sitesettings.logoURL}}">{% else %} {{ sitesettings.site_name }} {% endif %}
+	        			</br>
+	        			<div class="text-justify">
+							شما شاهد قالب «آغازین» از مجموعه سایتهای تولیدی توسط <a href="https://www.malekrayan.com">«شرکت فناوری اطلاعات ملک رایان»</a> می باشید. قالبی ساده ولی کارآمد که با سرعت بالا و امکان مدیریت ساده و قدرتمند قابل استفاده برای انواع فروشگاههای اینترنتی می باشد.
+	        			</div>
+	        			<p><a href="https://www.malekrayan.com">www.malekrayan.com</a></p>
+                    </div>
+	        		<div class="col-md-4 offset-md-1 footer-contact wow fadeInDown text-right">
+	        			<h5 class="text-white">تماس با ما</h5>
+	        			</br></br>
+	                	<p><i class="fas fa-map-marker-alt"></i> تجریش، خیابان شهرداری، کوچه شیخی، ساختمان شمیران</p>
+	                	<p><i class="fas fa-phone"></i> تلفن: 26317895</p>
+	                	<p><i class="fas fa-envelope"></i> ایمیل: <span>info@malekrayan.com</span></p>
+                    </div>
+                    <div class="col-md-4 footer-links wow fadeInUp text-right">
+                    	<div class="row">
+                    		<div class="col">
+                    			<h5 class="text-white">صفحات</h5>
+                    		</div>
+                    	</div>
+                    	</br></br>
+                    	<div class="row">
+                    		<div class="col-md-6 text-right">
+                    			<p><a class="scroll-link" href="{% static url 'home' %}">فروشگاه</a></p>
+                    			<p><a href="#">درباره ما</a></p>
+                    			<p><a href="#">قوانین فروشگاه</a></p>
+                    			<p><a href="#">مجوزها و افتخارات</a></p>
+                    		</div>
+                    		<!--
+                    		<div class="col-md-6">
+                    			<p><a href="#">Plans &amp; pricing</a></p>
+                    			<p><a href="#">Affiliates</a></p>
+                    			<p><a href="#">Terms</a></p>
+                    		</div>
+                    	-->
+                    	</div>
+                    </div>
+	            </div>
+	        </div>
+        </div>
+<!--        <div class="footer-bottom">
+        	<div class="container">
+        		<div class="row">
+           			<div class="col-md-6 footer-copyright">
+                    	&copy; Bootstrap Footer Template by <a href="https://azmind.com">AZMIND</a>
+                    </div>
+           			<div class="col-md-6 footer-social">
+                    	<a href="#"><i class="fab fa-facebook-f"></i></a> 
+						<a href="#"><i class="fab fa-twitter"></i></a> 
+						<a href="#"><i class="fab fa-google-plus-g"></i></a> 
+						<a href="#"><i class="fab fa-instagram"></i></a> 
+						<a href="#"><i class="fab fa-pinterest"></i></a>
+                    </div>
+           		</div>
+        	</div>
+        </div>
+-->
+    </footer>
+	<script src="{% static 'js/jquery-3.4.1.slim.min.js' %}" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+
+	<script src="{% static 'js/popper.min.js' %}" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+
+	<script src="{% static 'js/bootstrap.min.js' %}" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+	<script type="text/javascript" src="{% static 'js/cart.js' %}"></script>
+</body>
+</html>
