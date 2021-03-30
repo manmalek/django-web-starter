@@ -1,7 +1,8 @@
 var updateBtns = document.getElementsByClassName('update-cart');
-
+console.log("*************** Here 1")
 for (i = 0; i < updateBtns.length; i++) {
 	updateBtns[i].addEventListener('click', function(){
+		console.log("*************** Here 3")
 		var productId = this.dataset.product;
 		var action = this.dataset.action;
 		var quantity = 0;
@@ -25,7 +26,7 @@ for (i = 0; i < updateBtns.length; i++) {
 		}
 	})
 }
-
+console.log("*************** Here 2")
 function updateUserOrder(productId, action, quantity){
 	console.log('User is authenticated, sending data...')
 
