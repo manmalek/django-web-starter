@@ -49,7 +49,7 @@ function updateUserOrder(productId, action, quantity){
 }
 
 function addCookieItem(productId, action, quantity){
-	console.log('User is not authenticated...')
+	console.log('User is not authenticated...!')
 
 	if (action == 'add'){
 		if (cart[productId] == undefined){
